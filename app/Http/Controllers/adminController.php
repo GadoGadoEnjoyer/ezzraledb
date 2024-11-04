@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class adminController extends Controller
 {
@@ -20,6 +21,7 @@ class adminController extends Controller
         return view('createUserForm');
     }
     public function createUser(Request $request){
+        DB::beginTransaction();
         try{
             $validated = $request->validate([
                 'name' => 'required|string',
@@ -31,9 +33,11 @@ class adminController extends Controller
                 'password' => bcrypt($validated['password']),
                 'role' => $validated['role']
             ]);
+            DB::commit();
             return redirect()->back()->with('success', 'User has been created');
         }
         catch(\Exception $e){
+            DB::rollBack();
             \Log::error('Fail to create user with the following message'.$e->getMessage());
             return redirect()->back()->withErrors(['error' => 'An error occured while creating user']);
         }
@@ -43,6 +47,7 @@ class adminController extends Controller
         return view('updateUserForm', ['user' => $user]);
     }
     public function updateUser(Request $request, $id){
+        DB::beginTransaction();
         try{
             $validated = $request->validate([
                 'name' => 'required|string',
@@ -54,9 +59,11 @@ class adminController extends Controller
             $user->password = bcrypt($validated['password']);
             $user->role = $validated['role'];
             $user->save();
+            DB::commit();
             return redirect()->back()->with('success', 'User has been updated');
         }
         catch(\Exception $e){
+            DB::rollback();
             \Log::error('Fail to update user with the following message'.$e->getMessage());
             return redirect()->back()->withErrors(['error' => 'An error occured while updating user']);
         }

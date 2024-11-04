@@ -10,20 +10,14 @@ use Illuminate\Support\Facades\DB;
 class movementController extends Controller
 {
     public function validateMoveRecord(Request $request){
-        try{
-            $validated = $request->validate([
-                'sparepart_id' => 'required|exists:spareparts,id',
-                'movement_type' => 'required|string|in:in,out',
-                'qty' => 'required|integer|min:0',
-                'reason' => 'nullable|string',
-                'value' => 'required|integer|min:0'
-            ]);
-            return $validated;
-        }
-        catch(\Exception $e){
-            \Log::error('Fail to Validate the input with the following message'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while validating the input of move record']);
-        }
+        $validated = $request->validate([
+            'sparepart_id' => 'required|exists:spareparts,id',
+            'movement_type' => 'required|string|in:in,out',
+            'qty' => 'required|integer|min:0',
+            'reason' => 'nullable|string',
+            'value' => 'required|integer|min:0'
+        ]);
+        return $validated;
     }
     public function uploadMoveRecord(Request $request){
         DB::beginTransaction();

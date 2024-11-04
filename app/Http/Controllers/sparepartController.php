@@ -11,17 +11,11 @@ use Illuminate\Support\Facades\DB;
 class sparepartController extends Controller
 {
     public function validateSparepart(Request $request){
-        try{
-            $validated = $request->validate([
-                'name' => 'required|string',
-                'description' => 'nullable|string',
-            ]);
-            return $validated;
-        }
-        catch(\Exception $e){
-            \Log::error('Fail to Validate the input with the following message'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while validating the input of Spareparts']);
-        }
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
+        return $validated;
     }
     public function uploadSparepart(Request $request){
         DB::beginTransaction();
@@ -50,20 +44,15 @@ class sparepartController extends Controller
     }
     public function viewSparepartDetail($id){
         $sparepart = Sparepart::find($id);
-        return view('viewSparepartDetail', ['sparepart' => $sparepart]);
+        $images = $sparepart->images;
+        return view('viewSparepartDetail', ['sparepart' => $sparepart, 'images' => $images]);
     }
 
     public function validateType(Request $request){
-        try{
-            $validated = $request->validate([
-                'name' => 'required|string',
-            ]);
-            return $validated;
-        }
-        catch(\Exception $e){
-            \Log::error('Fail to Validate the new Sparepart type'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while validating this type']);
-        }
+        $validated = $request->validate([
+            'name' => 'required|string',
+        ]);
+        return $validated;
     }
     public function uploadType(Request $request){
         DB::beginTransaction();
@@ -85,17 +74,11 @@ class sparepartController extends Controller
     }
 
     public function validateAssignType(Request $request){
-        try{
-            $validated = $request->validate([
-                'types' => 'required|array',
-                'types.*' => 'integer|exists:sparepart_types,id'
-            ]);
-            return $validated;
-        }
-        catch(\Exception $e){
-            \Log::error('Fail to validate the type assignment'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while assigning types']);
-        }
+        $validated = $request->validate([
+            'types' => 'required|array',
+            'types.*' => 'integer|exists:sparepart_types,id'
+        ]);
+        return $validated;
     }
     public function assignType(Request $request, $id){
         try{

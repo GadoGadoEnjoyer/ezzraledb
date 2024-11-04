@@ -16,6 +16,12 @@ class Sparepart extends Model
     public function movements(){
         return $this->hasMany(SparepartMovement::class);
     }
+    public function images()
+    {
+        return $this->belongsToMany(Image::class, 'sparepart_images', 'sparepart_id', 'image_id');
+    }
+
+
 
     protected $fillable = ['name','current_qty','description'];
 }

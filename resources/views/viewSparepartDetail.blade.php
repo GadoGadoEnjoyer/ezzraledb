@@ -1,1 +1,2 @@
 {{$sparepart}}
+{{$images}}
