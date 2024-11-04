@@ -21,14 +21,15 @@ class movementController extends Controller
             return $validated;
         }
         catch(\Exception $e){
-            DB::rollBack();
             \Log::error('Fail to Validate the input with the following message'.$e->getMessage());
             return redirect()->back()->withErrors(['error' => 'An error occured while validating the input of move record']);
         }
     }
-    public function uploadMoveRecord(){
+    public function uploadMoveRecord(Request $request){
+        DB::beginTransaction();
         try{
             $validated = $this->validateMoveRecord($request);
+            $this->updateQuantity($validated['sparepart_id'], $validated['qty'], $validated['movement_type']);
             $sparepartMovement = SparepartMovement::create([
                 'sparepart_id' => $validated['sparepart_id'],
                 'movement_type' => $validated['movement_type'],
@@ -36,11 +37,37 @@ class movementController extends Controller
                 'reason' => $validated['reason'],
                 'value' => $validated['value']
             ]);
+
+            DB::commit();
         }
         catch(\Exception $e){
             DB::rollBack();
             \Log::error('Fail to upload the move record'.$e->getMessage());
             return redirect()->back()->withErrors(['error' => 'An error occured while inputting move record']);
         }
+    }
+    public function updateQuantity($sparepart_id,$qty,$movement_type){
+        try{
+            $sparepart = Sparepart::find($sparepart_id);
+            if ($movement_type == 'out') {
+                $qty = $qty * -1;
+            }
+            $new_qty = $sparepart->current_qty + $qty;
+            if ($new_qty < 0) {
+                throw new \Exception('Quantity cannot be negative');
+            }
+            else{
+                $sparepart->current_qty = $new_qty;
+                $sparepart->save();
+            }
+        }
+        catch(\Exception $e){
+            \Log::error('Fail to update the quantity'.$e->getMessage());
+            throw $e;
+        }
+    }
+    public function uploadMoveRecordForm(){
+        $spareparts = Sparepart::all();
+        return view('uploadMoveRecord', ['spareparts' => $spareparts]);
     }
 }

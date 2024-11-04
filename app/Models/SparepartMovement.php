@@ -12,4 +12,5 @@ class SparepartMovement extends Model
     public function sparepart() {
         return $this->belongsTo(Sparepart::class);
     }
+    protected $fillable = ['sparepart_id','movement_type','qty','reason','value'];
 }

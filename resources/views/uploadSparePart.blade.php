@@ -7,17 +7,12 @@
 <body>
     <h2>Add New Type</h2>
 
-    <form action="{{ route('uploadType') }}" method="POST">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <form action="{{ route('uploadSparepart') }}" method="POST">
+        @csrf
 
         <div>
             <label for="name">Spare Part Name</label>
             <input type="text" id="name" name="name" required>
-        </div>
-
-        <div>
-            <label for="current_qty">Quantity</label>
-            <input type="number" id="current_qty" name="current_qty" min="0" required>
         </div>
 
         <div>
