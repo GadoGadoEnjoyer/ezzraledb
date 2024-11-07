@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Sparepart</title>
+    <title>Edit Sparepart</title>
     <style>
         body {
             display: flex;
@@ -55,30 +55,31 @@
     </style>
 </head>
 <body>
-    <form action="{{ route('uploadSparepart') }}" method="POST">
-        <h2>Add Sparepart</h2>
+    <form action="{{ route('editSparepart', $sparepart->id) }}" method="POST">
+        <h2>Edit Sparepart</h2>
         @csrf
+        @method('PUT')
         @if (session('status'))
-        <div class="alert alert-fail">
+        <div class="alert alert-success">
             {{ session('status') }}
         </div>
-        @endif
+    @endif
         <div>
             <label for="name">Spare Part Name</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" value="{{$sparepart->name}}" required>
         </div>
 
         <div>
             <label for="description">Description (Optional)</label>
-            <textarea id="description" name="description"></textarea>
+            <textarea id="description" name="description">{{$sparepart->description}}</textarea>
         </div>
 
         <div>
             <label for="status">Status</label>
-            <input type="text" id="status" name="status" placeholder="Working" required>
+            <input type="text" id="status" name="status" value="{{$sparepart->status}}" required>
         </div>
 
-        <button type="submit">Add Spare Part</button>
+        <button type="submit">Edit Spare Part</button>
     </form>
 </body>
 </html>

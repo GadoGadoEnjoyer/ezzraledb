@@ -23,5 +23,5 @@ class Sparepart extends Model
 
 
 
-    protected $fillable = ['name','current_qty','description'];
+    protected $fillable = ['name','current_qty','description','status'];
 }

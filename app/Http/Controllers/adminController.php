@@ -34,12 +34,12 @@ class adminController extends Controller
                 'role' => $validated['role']
             ]);
             DB::commit();
-            return redirect()->back()->with('success', 'User has been created');
+            return redirect("/admin")->with('status', 'New user created!');
         }
         catch(\Exception $e){
             DB::rollBack();
             \Log::error('Fail to create user with the following message'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while creating user']);
+            return redirect("/admin/createUser")->with('status', 'Failed to create user. Maybe the name already existed?');
         }
     }
     public function updateUserForm($id){
@@ -60,12 +60,12 @@ class adminController extends Controller
             $user->role = $validated['role'];
             $user->save();
             DB::commit();
-            return redirect()->back()->with('success', 'User has been updated');
+            return redirect('/admin/viewUser')->with('status', 'User has been updated');
         }
         catch(\Exception $e){
             DB::rollback();
             \Log::error('Fail to update user with the following message'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while updating user']);
+            return redirect('/admin/updateUser/'.$id)->with('status','An error occured while updating user');
         }
     }
     public function viewUser(){
@@ -93,5 +93,13 @@ class adminController extends Controller
             \Log::error('Fail to login with the following message'.$e->getMessage());
             return redirect()->back()->withErrors(['error' => 'An error occured while logging in']);
         }
+    }
+    public function logout(){
+        Auth::logout();
+        return redirect('/login');
+    }
+
+    public function main(){
+        return redirect('/sparepart');
     }
 }

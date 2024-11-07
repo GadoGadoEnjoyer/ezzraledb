@@ -13,12 +13,17 @@ return new class extends Migration
     {
         Schema::create('spareparts', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->integer("current_qty");
-            $table->string("description")->nullable();
+            $table->string('name');
+            $table->integer('current_qty');
+            $table->string('description')->nullable();
+            $table->string('status');
             $table->timestamps();
+
+            // Add a composite unique constraint on the 'name' and 'status' columns
+            $table->unique(['name', 'status']);
         });
     }
+
 
     /**
      * Reverse the migrations.

@@ -7,6 +7,11 @@
 <body>
 <div class="container mt-5">
     <h2>Upload Image</h2>
+    @if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
     <form action="{{ route('uploadImage', $sparepart->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="text" name="alt_text" class="form-control" placeholder="Enter Name">

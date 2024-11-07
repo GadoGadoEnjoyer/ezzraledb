@@ -29,12 +29,12 @@ class imageController extends Controller
                 'image_id' => $img->id
             ]);
             DB::commit();
-            return redirect()->route('viewSparepartDetail', ['id' => $id]);
+            return redirect()->route('viewSparepartDetail', ['id' => $id])->with('status', 'Image uploaded!');
         }
         catch(\Exception $e){
             DB::rollBack();
             \Log::error('Fail to upload the image with the following message'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while uploading the image']);
+            return redirect()->route('uploadImageForm', ['id' => $id])->with('status', 'Failed to upload image');
         }
     }
     public function validateImage(Request $request){
