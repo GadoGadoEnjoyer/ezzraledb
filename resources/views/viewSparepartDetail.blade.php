@@ -61,7 +61,11 @@
     <div class="container">
         <a href="{{ route('adminPage') }}" class="btn">Back</a>
         <h2>{{ $sparepart->name }}</h2>
-
+        @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
         <div class="details">
             <p><strong>Description:</strong> {{ $sparepart->description }}</p>
             <p><strong>Current Quantity:</strong> {{ $sparepart->current_qty }}</p>

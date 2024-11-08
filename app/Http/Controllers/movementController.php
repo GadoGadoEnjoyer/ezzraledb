@@ -31,12 +31,12 @@ class movementController extends Controller
                 'value' => $validated['value']
             ]);
             DB::commit();
-            return redirect('/sparepart/movement')->with('status', 'Move record added!');
+            return redirect()->route('viewMovement')->with('status', 'Move record added!');
         }
         catch(\Exception $e){
             DB::rollBack();
             \Log::error('Fail to upload the move record'.$e->getMessage());
-            return redirect('/sparepart/movement/upload/'.$id)->with('status', 'Failed to add Move record!');
+            return redirect()->route('uploadMoveRecordForm',$id)->with('status', 'Failed to upload move record');
         }
     }
     public function updateQuantity($sparepart_id,$qty,$movement_type){

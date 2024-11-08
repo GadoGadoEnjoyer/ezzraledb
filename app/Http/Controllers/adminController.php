@@ -14,7 +14,7 @@ class adminController extends Controller
             return view('adminPage');
         }
         else{
-            return redirect()->back()->withErrors(['error' => 'You are not authorized to access this page']);
+            return redirect()->route('loginForm')->with('status','You are not authorized to access this page');
         }
     }
     public function createUserForm(){
@@ -34,12 +34,12 @@ class adminController extends Controller
                 'role' => $validated['role']
             ]);
             DB::commit();
-            return redirect("/admin")->with('status', 'New user created!');
+            return redirect()->route("adminPage")->with('status', 'New user created!');
         }
         catch(\Exception $e){
             DB::rollBack();
             \Log::error('Fail to create user with the following message'.$e->getMessage());
-            return redirect("/admin/createUser")->with('status', 'Failed to create user. Maybe the name already existed?');
+            return redirect()->route("createUserForm")->with('status', 'Failed to create user. Maybe the name already existed?');
         }
     }
     public function updateUserForm($id){
@@ -60,12 +60,12 @@ class adminController extends Controller
             $user->role = $validated['role'];
             $user->save();
             DB::commit();
-            return redirect('/admin/viewUser')->with('status', 'User has been updated');
+            return redirect()->route("viewUser")->with('status', 'User has been updated');
         }
         catch(\Exception $e){
             DB::rollback();
             \Log::error('Fail to update user with the following message'.$e->getMessage());
-            return redirect('/admin/updateUser/'.$id)->with('status','An error occured while updating user');
+            return redirect()->route("updateUserForm",$id)->with('status','An error occured while updating user');
         }
     }
     public function viewUser(){
@@ -83,23 +83,23 @@ class adminController extends Controller
                 'password' => 'required|string'
             ]);
             if(Auth::attempt($validated)){
-                return redirect('/admin');
+                return redirect()->route('main');
             }
             else{
-                return redirect()->back()->withErrors(['error' => 'Invalid username or password']);
+                return redirect()->route('loginForm')->with('status','Login failed');
             }
         }
         catch(\Exception $e){
             \Log::error('Fail to login with the following message'.$e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occured while logging in']);
+            return redirect()->route('loginForm')->with('status','Login failed, what went wrong?');
         }
     }
     public function logout(){
         Auth::logout();
-        return redirect('/login');
+        return redirect()->route('loginForm');
     }
 
     public function main(){
-        return redirect('/sparepart');
+        return redirect()->route('viewSparepart');
     }
 }

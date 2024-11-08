@@ -43,6 +43,11 @@
 </head>
 <body>
     <form action="{{ route('login') }}" method="POST">
+        @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
         <h2>Login</h2>
         @csrf
         <label for="name">Name</label>

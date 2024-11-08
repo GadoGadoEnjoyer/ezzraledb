@@ -7,36 +7,32 @@ use App\Http\Controllers\adminController;
 use App\Http\Controllers\imageController;
 use App\Http\Middleware\CheckUser;
 
-Route::get('/sparepart/upload', [sparepartController::class, 'uploadSparepartForm'])->name('uploadSparepartForm');
-Route::post('/sparepart/upload', [sparepartController::class, 'uploadSparepart'])->name("uploadSparepart");
-Route::get('/sparepart/type/upload', [sparepartController::class, 'uploadTypeForm'])->name('uploadTypeForm');
-Route::post('/sparepart/type/upload', [sparepartController::class, 'uploadType'])->name("uploadType");
-Route::get('/sparepart/assign/{id}', [sparepartController::class, 'assignTypeForm'])->name('assignTypeForm');
-Route::post('/sparepart/assign/{id}', [sparepartController::class, 'assignType'])->name("assignType");
-Route::get('/sparepart/movement/upload/{id}', [movementController::class, 'uploadMoveRecordForm'])->name('uploadMoveRecordForm');
-Route::post('/sparepart/movement/upload/{id}', [movementController::class, 'uploadMoveRecord'])->name("uploadMoveRecord");
-Route::get('/sparepart/movement', [movementController::class, 'viewMoveRecord'])->name("viewMovement");
-Route::get('/sparepart', [sparepartController::class, 'viewSparepart'])->name("viewSparepart");
-Route::get('/sparepart/{id}', [sparepartController::class, 'viewSparepartDetail'])->name("viewSparepartDetail");
-Route::get('/sparepart/edit/{id}', [sparepartController::class, 'editSparepartForm'])->name("editSparepartForm");
-Route::put('/sparepart/edit/{id}', [sparepartController::class, 'editSparepart'])->name("editSparepart");
+Route::get('/sparepart/upload', [sparepartController::class, 'uploadSparepartForm'])->middleware(CheckUser::class.':admin')->name('uploadSparepartForm');
+Route::post('/sparepart/upload', [sparepartController::class, 'uploadSparepart'])->middleware(CheckUser::class.':admin')->name("uploadSparepart");
+Route::get('/sparepart/movement/upload/{id}', [movementController::class, 'uploadMoveRecordForm'])->middleware(CheckUser::class.':admin,employee')->name('uploadMoveRecordForm');
+Route::post('/sparepart/movement/upload/{id}', [movementController::class, 'uploadMoveRecord'])->middleware(CheckUser::class.':admin,employee')->name("uploadMoveRecord");
+Route::get('/sparepart/movement', [movementController::class, 'viewMoveRecord'])->middleware(CheckUser::class.':admin,employee')->name("viewMovement");
+Route::get('/sparepart', [sparepartController::class, 'viewSparepart'])->middleware(CheckUser::class.':admin,employee')->name("viewSparepart");
+Route::get('/sparepart/{id}', [sparepartController::class, 'viewSparepartDetail'])->middleware(CheckUser::class.':admin,employee')->name("viewSparepartDetail");
+Route::get('/sparepart/edit/{id}', [sparepartController::class, 'editSparepartForm'])->middleware(CheckUser::class.':admin')->name("editSparepartForm");
+Route::put('/sparepart/edit/{id}', [sparepartController::class, 'editSparepart'])->middleware(CheckUser::class.':admin')->name("editSparepart");
 
 
-Route::get('/admin', [adminController::class, 'adminPage'])->name('adminPage');
-Route::get('/admin/createUser', [adminController::class, 'createUserForm'])->name('createUserForm');
-Route::post('/admin/createUser', [adminController::class, 'createUser'])->name("createUser");
-Route::get('/admin/updateUser/{id}', [adminController::class, 'updateUserForm'])->name("updateUserForm");
-Route::put('/admin/updateUser/{id}', [adminController::class, 'updateUser'])->name("updateUser");
-Route::get('/admin/viewUser', [adminController::class, 'viewUser'])->name("viewUser");
+Route::get('/admin', [adminController::class, 'adminPage'])->middleware(CheckUser::class.':admin')->name('adminPage');
+Route::get('/admin/createUser', [adminController::class, 'createUserForm'])->middleware(CheckUser::class.':admin')->name('createUserForm');
+Route::post('/admin/createUser', [adminController::class, 'createUser'])->middleware(CheckUser::class.':admin')->name("createUser");
+Route::get('/admin/updateUser/{id}', [adminController::class, 'updateUserForm'])->middleware(CheckUser::class.':admin')->name("updateUserForm");
+Route::put('/admin/updateUser/{id}', [adminController::class, 'updateUser'])->middleware(CheckUser::class.':admin')->name("updateUser");
+Route::get('/admin/viewUser', [adminController::class, 'viewUser'])->middleware(CheckUser::class.':admin')->name("viewUser");
 
-Route::get('/image/upload/{id}', [imageController::class, 'uploadImageForm'])->name('uploadImageForm');
-Route::post('/image/upload/{id}', [imageController::class, 'uploadImage'])->name("uploadImage");
+Route::get('/image/upload/{id}', [imageController::class, 'uploadImageForm'])->middleware(CheckUser::class.':admin,employee')->name('uploadImageForm');
+Route::post('/image/upload/{id}', [imageController::class, 'uploadImage'])->middleware(CheckUser::class.':admin,employee')->name("uploadImage");
 
-Route::get('/login', [adminController::class, 'loginForm']);
+Route::get('/login', [adminController::class, 'loginForm'])->name("loginForm");
 Route::post('/login', [adminController::class, 'login'])->name("login");
 Route::get('/logout', [adminController::class, 'logout'])->name("logout");
 
 Route::get('/search', [sparepartController::class, 'search'])->name('search');
 
-Route::get('/', [AdminController::class, 'main'])->middleware(CheckUser::class.':admin,employee');
+Route::get('/', [AdminController::class, 'main'])->middleware(CheckUser::class.':admin,employee')->name('main');
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movement Records</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://unpkg.com/tablesort@5.2.1/dist/tablesort.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/table-sort-js/table-sort.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,15 +57,16 @@
     @endif
 
     <h2>Movement Records</h2>
-    <table id="movementsTable">
+    <table id="movementsTable" class="table-sort table-arrows">
         <thead>
             <tr>
                 <th>Spare Part Name</th>
                 <th>Movement Type</th>
-                <th>Quantity</th>
+                <th data-sort-method="number">Quantity</th>
                 <th>Reason</th>
-                <th>Value</th>
-                <th>Created At</th>
+                <th data-sort-method="number">Value</th>
+                <th data-sort-method="date">Created At</th>
+
             </tr>
         </thead>
         <tbody>
